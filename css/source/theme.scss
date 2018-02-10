@@ -1,0 +1,76 @@
+/**
+* Black theme for reveal.js. This is the opposite of the 'white' theme.
+*
+* Copyright (C) 2015 Hakim El Hattab, http://hakim.se
+*/
+
+// This file has been copied over from
+// ../../bower_components/reveal.js/css/theme/source/black.scss
+
+// See ../../bower_components/reveal.js/css/theme/README.md
+// for further explanations on how to create a custom reveal.js theme.
+
+// Default mixins and settings -----------------
+@import "../../bower_components/reveal.js/css/theme/template/mixins";
+@import "../../bower_components/reveal.js/css/theme/template/settings";
+// ---------------------------------------------
+
+
+// Include theme-specific fonts
+@import url(../bower_components/reveal.js/lib/font/source-sans-pro/source-sans-pro.css);
+
+@import url('https://fonts.googleapis.com/css?family=Lato');
+
+$backgroundColor: #181D21;
+
+$mainColor: #fff;
+$headingColor: #EFD01B;
+$linkColor: #e7ad52;
+
+$mainFontSize: 38px;
+$mainFontWeight: 300;
+$mainFont: 'Lato', Helvetica, sans-serif;
+$headingFont: 'Lato', Helvetica, sans-serif;
+$headingTextShadow: 2px 2px #000;
+$headingLetterSpacing: normal;
+$headingTextTransform: none;
+$headingFontWeight: 900;
+$linkColorHover: lighten( $linkColor, 15% );
+$selectionBackgroundColor: lighten( $linkColor, 25% );
+
+$heading1Size: 2.5em;
+$heading2Size: 1.6em;
+$heading3Size: 1.3em;
+$heading4Size: 1.0em;
+
+section.has-light-background {
+	&, h1, h2, h3, h4, h5, h6 {
+		color: #222;
+	}
+}
+// Theme template ------------------------------
+@import "../../bower_components/reveal.js/css/theme/template/theme";
+// ---------------------------------------------
+
+.pantheon-logo {
+	position: absolute;
+	bottom: 3em;
+	left: 3em;
+    width: 100px;
+}
+
+.social {
+	position: absolute;
+    a  {font-size: 1rem; }
+	right: 3em;
+	z-index: 100;
+}
+
+.reveal section img {
+	border: none;
+	background: none;
+}
+
+.reveal section img.portrait {
+	height: 300px;
+}

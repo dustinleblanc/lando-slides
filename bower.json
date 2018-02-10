@@ -1,0 +1,10 @@
+{
+  "name": "be-a-developer-experience-superhero",
+  "version": "0.0.0",
+  "dependencies": {
+    "reveal.js": "~3.3.0",
+    "highlightjs": "~9.0.0",
+    "reveal-asciinema": "jfx2006/reveal-asciinema",
+    "asciinema-player": "asciinema/asciinema-player#^2.5.0"
+  }
+}
