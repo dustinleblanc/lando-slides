@@ -1,0 +1,268 @@
+<section data-background="resources/images/language.gif">
+    <h2 class="fragment">Speak Their Language</h2>
+    <p class="fragment">
+        <strong>Accessible</strong>, reliable, and reusable scripts</p>
+</section>
+<section>
+    <h3>Devops Scripts Should Be</h3>
+    <ul>
+        <li class="fragment">Easy to contribute</li>
+        <li class="fragment">Easy to understand</li>
+        <li class="fragment">Easy to extend</li>
+    </ul>
+</section>
+<section>
+    <img src="resources/images/robo.png" alt="">
+    <h3>Robo to the Rescue!</h3>
+    <a href="http://robo.li">robo.li</a>
+</section>
+<section>
+    <pre><code class="php">
+class RoboFile extends \Robo\Tasks {
+    use Boedah\Robo\Task\Drush\loadTasks;
+
+    /**
+    * Path to Drush executable.
+    */
+    protected $drushBin;
+
+    /**
+    * Path to Drupal root.
+    */
+    protected $drupalRoot;
+
+    /**
+    * RoboFile constructor.
+    */
+    public function __construct() {
+      $this->disable_prod = [
+          'foo_module',
+      ];
+
+      $this->enable_dev = [
+          'context_ui',
+          'views_ui',
+          'field_ui',
+          'devel',
+          'diff',
+          'stage_file_proxy'
+      ];
+
+      $this->envs = [
+          'dev' => 'https://dev.example.com/',
+          'test' => 'https://test.example.com/',
+          'prod' => 'https://example.com'
+      ];
+
+      $this->drushBin = (__DIR__) . '/vendor/bin/drush';
+      $this->drupalRoot = (__DIR__) . '/docroot';
+    }
+
+    /**
+    * Synchronizes local development environment with a specified remote.
+    * @param $env
+    * @throws \Robo\Exception\TaskException
+    */
+    public function sync($env) {
+      if (!array_key_exists($env, $this->envs)) {
+          return $this->say("I'm sorry but that environment is invalid");
+      }
+      if ($this->syncDb($env)->run()->wasSuccessful()) {
+          $this->disableProdModules();
+          $this->enableDevModules();
+          $this->buildDrushTask()
+            ->exec("vset stage_file_proxy_origin {$this->getEnvUrl($env)}")
+            ->run();
+      }
+
+      if ($this->ask("Should I run updates and revert features? (y/n) \n") === 'y') {
+          $this->runUpdates();
+      }
+    }
+
+    /**
+    * Run database updates and revert features.
+    */
+    public function runUpdates() {
+      $this->buildDrushTask()
+        ->maintenanceOn()
+        ->updateDb()
+        ->revertAllFeatures()
+        ->maintenanceOff()
+        ->run();
+    }
+
+    /**
+    * @param $env
+    * @return $this
+    */
+    private function syncDb($env) {
+      return $this->buildDrushTask()
+        ->exec("sql-drop")
+        ->exec("sql-sync @app.{$env} @self");
+    }
+
+    /**
+    * Builds a Drush task with common arguments.
+    *
+    * @return $this
+    *    A DrushStack task to use in building a task.
+    */
+    private function buildDrushTask() {
+      return $this->taskDrushStack($this->drushBin)
+          ->drupalRootDirectory($this->drupalRoot);
+    }
+
+    /**
+    * @return mixed
+    */
+    public function disableProdModules() {
+      return $this->buildDrushTask()
+          ->exec("dis {$this->getDisableProd()}")
+          ->run();
+    }
+
+    /**
+    * Get a list of modules to disable to pass to drush
+    * @return string
+    */
+    private function getDisableProd() {
+      return implode(' ', $this->disable_prod);
+    }
+
+    /**
+    * @return mixed
+    */
+    public function enableDevModules() {
+      return $this->buildDrushTask()
+          ->exec("en {$this->getEnableDev()}")
+          ->run();
+    }
+
+    /**
+    * Get a list of modules to enable to pass to drush
+    * @return mixed
+    */
+    private function getEnableDev() {
+      return implode(' ', $this->enable_dev);
+    }
+
+    /**
+    * @param $env
+    * @return mixed
+    */
+    private function getEnvUrl($env) {
+      return $this->envs[$env];
+    }
+}
+    </code></pre>
+    <p>All public methods become CLI commands</p>
+</section>
+<section>
+  <h3>Powerful Abstractions</h3>
+  <pre class="php"><code>
+    /**
+     * Provision the database seed for Docker.
+     */
+    public function dbSeed() {
+      $this->_exec('gunzip dump.sql.gz');
+      $this->taskFilesystemStack()
+           ->mkdir('mariadb-init')
+           ->remove('mariadb-init/dump.sql')
+           ->rename('dump.sql', 'mariadb-init/dump.sql')
+           ->run();
+    }
+  </code></pre>
+  <p>Abstractions are more fault tolerant</p>
+</section>
+<section>
+  <pre class="php"><code>
+    public function build() {
+        $this->taskNpmInstall()
+             ->dir(self::THEME_DIR)
+             ->run();
+        $this->taskBowerInstall()
+             ->dir(self::THEME_DIR)
+             ->run();
+        $this->say('Theme assets built!');
+    }
+  </code></pre>
+</section>
+<section>
+  <h3>Drupal Specific Extensions</h3>
+  <pre class="php"><code>
+    class RoboFile extends \Robo\Tasks {
+      use \Boedah\Robo\Task\Drush\loadTasks;
+
+      /**
+       * Install Drupal with simple config.
+       */
+      public function siteInstall() {
+        $this->buildDrushTask()
+             ->siteName('Awesome Drupal')
+             ->siteMail('site-mail@example.com')
+             ->locale('en')
+             ->accountMail('mail@example.com')
+             ->accountName('admin')
+             ->accountPass('#whatevergonnadrushulianyway')
+             ->disableUpdateStatusModule()
+             ->siteInstall('slick_profile')
+             ->run();
+        }
+
+        private function buildDrushTask() {
+          return $this->taskDrushStack(self::DRUSH_BIN)
+                      ->drupalRootDirectory(self::DRUPAL_ROOT);
+        }
+    }
+  </code></pre>
+  <a href="https://github.com/boedah/robo-drush">boedah/robo-drush</a>
+</section>
+<section>
+  <h3>Meta Commands</h3>
+  <pre class="php"><code>
+      class RoboFile extends \Robo\Tasks {
+
+      	/**
+      	 * Run Behat Tests.
+      	 */
+      	public function behat() {
+      		$this->taskBehat(__DIR__ . '/vendor/bin/behat')
+      		     ->format( 'pretty' )
+      		     ->config( __DIR__ . '/tests/behat-pantheon.yml' )
+      		     ->colors()
+      		     ->noInteraction()
+      		     ->run();
+      	}
+
+      	/**
+      	 * Run Unit Tests for all *custom* modules.
+      	 */
+      	public function unit() {
+      		$this->taskPHPUnit(__DIR__ . '/vendor/bin/phpunit')
+               ->configFile(__DIR__ . '/web/core/phpunit.xml.dist')
+      		     ->files( __DIR__ . '/web/modules/custom/**/tests/' )
+      		     ->run();
+      	}
+
+      	/**
+      	 * Lint custom modules and themes with Drupal coding standards.
+      	 */
+      	public function lint() {
+      		$this->taskExec(__DIR__ . '/vendor/bin/phpcbf')
+               ->rawArg('--standard=Drupal')
+               ->rawArg('-n web/modules/custom/* web/themes/custom/*')
+               ->run();
+      	}
+
+        /**
+      	 * Run *full* test suite.
+      	 */
+      	public function test() {
+      		$this->lint();
+      		$this->unit();
+      		$this->behat();
+      	}
+      }
+  </code></pre>
+</section>

@@ -1,0 +1,63 @@
+<section data-background='resources/images/robuts.gif'>
+  <h2>Make Machines Do Boring Things</h2>
+  <p class="fragment"><strong>Automated</strong> tests, builds, and deployments</p>
+</section>
+<section>
+  <h3>You Don't Need a Dedicated QA team</h3>
+  <p class="fragment">Okay, maybe you should still have one...</p>
+  <p class="fragment">But hopefully they can become more familiar with the ping pong table</p>
+</section>
+<section>
+  <h3>Document Every Feature with a Test</h3>
+  <pre class="gherkin"><code>
+  Feature: User can click button that takes them to a search engine.
+    @api
+    Scenario: Logged in Users get Google
+      Given I am logged in as a user with the "authenticated" role
+      And I click "Go to Search"
+      Then I am redirected to "Google"
+
+    @api
+    Scenario: Unauthenticated users get Bing
+      Given I am an anonymous user
+      And I click "Go to Search"
+      Then I am redirected to "Bing"
+  </code></pre>
+  <p>If something breaks a feature, you should know right away</p>
+  <p>Developers can add new features with confidence</p>
+</section>
+<section>
+  <h3>Continuous Integration and Continuous Delivery are no longer just for the big shops</h3>
+</section>
+<section>
+  <img src="resources/images/terminus.jpg" alt="">
+</section>
+<section>
+  <h3>Terminus Build Tools</h3>
+  <pre class="fragment"><code>
+    $terminus build:project:create best-site-ever
+  </code></pre>
+  <ul class="fragment">
+    <li>New Pantheon site</li>
+    <li>New Github repository</li>
+    <li>CircleCI configured</li>
+    <li>Basic Behat test suite</li>
+    <li>Automated deployments to Pantheon</li>
+  </ul>
+  <p>
+
+    <a class="fragment" href="https://github.com/pantheon-systems/terminus-build-tools-plugin">pantheon-systems/terminus-build-tools-plugin</a>
+  </p>
+</section>
+<section>
+  <h3>Things to do in CI/CD</h3>
+  <ul>
+    <li>Compile Assets</li>
+    <li>Run acceptance, functional, and unit tests</li>
+    <li>Visual regression testing</li>
+    <li>Check code style and complexity</li>
+    <li>Deploy to dev/test/live</li>
+    <li>Notify Stakeholders, deliver stories</li>
+    <li>Anything that happens before every deploy</li>
+  </ul>
+</section>

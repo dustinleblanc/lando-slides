@@ -1,0 +1,49 @@
+<section>
+    <h2>An Example Lando File</h2>
+</section>
+
+<section>
+    <h3>Basic Example</h3>
+    <pre><code class="yaml">
+name: cornell-camp-sprint
+recipe: pantheon
+config:
+  framework: drupal8
+  env: dev
+  site: cornell-camp-sprint
+  id: ec66283b-0afa-4b2c-a884-34d4e999ee3e
+    </code></pre>
+</section>
+<section>
+    <p>You can override service config, add containers, inject env vars, etc...</p>
+    <pre><code class="yaml">
+services:
+  appserver:
+    overrides:
+      services:
+        environment:
+            BEHAT_PARAMS: >-
+              {
+                  "extensions" : {
+                      "Behat\\MinkExtension" : {
+                          "base_url" : "http://nginx/"
+                        }
+                    }
+                }
+    </code></pre>
+</section>
+<section>
+    <p>You can add custom tooling commands, this is super flexible</p>
+    <pre><code class="yaml">
+tooling:
+  test:
+    service: appserver
+    cmd:
+      - "robo"
+      - "test"
+    </code></pre>
+</section>
+<section data-background="resources/images/yasss.gif">
+    <h3 class="fragment">I know</h3>
+    <p class="fragment"> It's amazing</p>
+</section>

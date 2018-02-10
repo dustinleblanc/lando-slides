@@ -1,0 +1,65 @@
+<section data-background="resources/images/lando.gif">
+    <h2 class="fragment">One Dependency to Rule Them All</h2>
+    <p class="fragment"><strong>Minimal</strong> Local Dependencies (cross platform, as much as possible)</p>
+</section>
+<section>
+    <div class="lando-logo">
+        <img src="resources/images/lando-logo.png" alt="Lando logo">
+    </div>
+    <p>One package to install, all the things provisioned on demand.</p>
+</section>
+<section>
+    <asciinema-player src="/resources/startupcast.json" theme="solarized-dark" speed="2" rows="24"></asciinema-player>
+</section>
+<section>
+    <pre class="lando_file"><code>
+  name: cornell-camp-sprint
+  recipe: pantheon
+  config:
+    framework: drupal8
+    env: dev
+    site: cornell-camp-sprint
+    id: ec66283b-0afa-4b2c-a884-34d4e999ee3e
+  services:
+    appserver:
+      overrides:
+        services:
+          environment:
+            BEHAT_PARAMS: >-
+            {"extensions" : {
+                "Behat\\MinkExtension" : {
+                    "base_url" : "http://nginx/"}}}
+  tooling:
+    test:
+      service: appserver
+      cmd:
+        - "composer"
+        - "test"
+    phpunit:
+      service: appserver
+      cmd:
+        - "composer"
+        - "test:unit"
+    </code></pre>
+    <p>Single declarative file to configure infrastructure that ships
+        <strong>with the project</strong>
+    </p>
+</section>
+<section>
+  <h3>A Closer Look at the Tooling Section</h3>
+  <pre class="yaml"><code>
+  tooling:
+    test:
+      service: appserver
+      cmd:
+        - "composer"
+        - "test"
+    phpunit:
+      service: appserver
+      cmd:
+        - "composer"
+        - "test:unit"
+    </code></pre>
+    <p class="fragment">Allows for abstraction of test scripts inside container.</p>
+    <p class="fragment">Super flexible, can define almost anything</p>
+</section>
