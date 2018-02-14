@@ -10,3 +10,86 @@
     </ul>
     <p class="fragment">Mostly everything people complained about with Kalabox</p>
 </section>
+<section>
+    <h3>The Lando File</h3>
+</section>
+<section>
+    <pre><code>
+    cool-project
+    ├── .git
+    ├── .gitignore
+    ├── .lando.yml
+    ├── README.md
+    ├── circle.yml
+    ├── composer.json
+    ├── composer.lock
+    ├── config
+    ├── pantheon.yml
+    ├── tests
+    ├── vendor
+    └── web
+    </code></pre>
+
+    <p class="fragment">Infrastructure definition ships with project</p>
+
+</section>
+<section>
+    <h3>Cool Shit Docker-Compose Doesn't Do</h3>
+</section>
+<section>
+    <pre><code>
+NAME            lando.dev
+LOCATION        /Users/dustinleblanc/lando
+SERVICES        appserver, lando
+
+APPSERVER URLS  https://localhost:32768
+                http://localhost:32769
+                http://docs.lndo.site
+                https://docs.lndo.site
+    </code></pre>
+    <p class="fragment">Automatic Port assignment and internet based proxy.</p>
+</section>
+<section>
+    <img src="resources/images/neo.gif" alt="I know kung fu...">
+    <p class="fragment">Effortless File sharing</p>
+</section>
+<section>
+    <pre><code class="sh">
+        # wtfbbq?
+        docker exec -t -i container_name /bin/bash
+        # Aww yiss...
+        lando ssh appserver
+    </code></pre>
+    <p class="fragment">SSH like a boss.</p>
+</section>
+<section>
+    <h3>Recipes are the bee's knees!</h3>
+    <pre><code class="yaml">
+        name: Awesome D8
+        recipe: drupal8
+        config:
+          php: '7.1'
+          via: nginx
+          webroot: web
+    </code></pre>
+    <p class="fragment">All one needs for a basic d8 site in six lines of YAML</p>
+</section>
+<section>
+    <h3>Tooling</h3>
+    <pre><code class="yaml">
+tooling:
+  npm:
+    service: lando
+  node:
+    service: lando
+  grunt:
+    service: lando
+  lando:
+    service: lando
+    description: I heard you like Lando? Have some Lando in your Lando.
+    cmd: /app/bin/lando.js
+  yarn:
+    service: lando
+</code>Lando's own Tooling definition</pre>
+    <p class="fragment">Tooling allows for simple aliases for complex processes</p>
+</section>
